@@ -17,8 +17,8 @@
         <h1 class="text-2xl font-bold">Categories</h1>
 
         <a href="{{ route('admin.categories.create') }}"
-           class="bg-blue-500 text-white px-4 py-2 rounded">
-            + Add Category
+           class="bg-green-500 text-white px-5 py-3 rounded">
+             Add Category
         </a>
     </div>
 

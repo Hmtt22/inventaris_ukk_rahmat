@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-bold">Items</h1>
 
         <a href="{{ route('admin.items.create') }}"
-           class="bg-blue-500 text-white px-4 py-2 rounded">
+           class="bg-green-500 text-white px-5 py-3 rounded">
             + Add Item
         </a>
     </div>

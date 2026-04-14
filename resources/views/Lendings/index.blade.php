@@ -65,17 +65,17 @@
                     {{-- Description --}}
                     <td class="p-3">{{ $lending->description ?? '-' }}</td>
 
-                    {{-- Tanggal Pinjam (pakai created_at) --}}
+                    {{-- Tanggal Pinjam dengan Jam (created_at) --}}
                     <td class="p-3">
-                        {{ $lending->created_at->format('d-m-Y') }}
+                        {{ now()->timezone('Asia/Jakarta')->format('d-m-Y H:i') }}
                     </td>
 
                     {{-- Returned At --}}
-                    <td class="p-3">
-                        {{ $lending->returned_at 
-                            ? \Carbon\Carbon::parse($lending->returned_at)->format('d-m-Y') 
-                            : 'Not Returned' }}
-                    </td>
+                   <td class="p-3">
+    {{ $lending->returned_at
+        ? \Carbon\Carbon::parse($lending->returned_at)->timezone('Asia/Jakarta')->format('d-m-Y H:i')
+        : 'Not Returned' }}
+</td>
 
                     {{-- Edited By --}}
                     <td class="p-3">
@@ -96,22 +96,7 @@
                                 </button>
                             </form>
                         @endif
-
-                        {{-- DELETE --}}
-                        <form action="{{ route('lendings.destroy', $lending->id) }}"
-                              method="POST"
-                              class="inline">
-                            @csrf
-                            @method('DELETE')
-
-                            <button onclick="return confirm('Delete lending?')"
-                                    class="bg-red-500 px-3 py-1 text-white rounded hover:bg-red-600">
-                                Delete
-                            </button>
-                        </form>
-
                     </td>
-
                 </tr>
                 @empty
                 <tr>

@@ -4,6 +4,5 @@
 
 @section("content")
 
-<p>ini halaman admin</p>
 
 @endsection
