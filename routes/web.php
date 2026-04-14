@@ -89,7 +89,7 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
 
 Route::prefix('operator')->middleware('role:operator')->group(function () {
     Route::get('/dashboard', function () {return view('operator.dashboard');})->name('operator.dashboard');
-    
+
     Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
     Route::get('/lendings/create', [LendingController::class, 'create'])->name('lendings.create');
     Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
@@ -104,6 +104,7 @@ Route::prefix('operator')->middleware('role:operator')->group(function () {
 });
 
 Route::prefix('users')->group(function () {
+    Route::get('/export', [UserController::class, 'export'])->name('users.export');
 
     // USER MANAGEMENT (admin & operator bisa akses)
     Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -114,6 +115,9 @@ Route::prefix('users')->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+
+// Pastikan diletakkan di dalam prefix admin atau sesuai struktur route Anda
+Route::get('items/export', [ItemController::class, 'export'])->name('admin.items.export');
 
 Route::post('/logout', function (Request $request) {
     Auth::logout();

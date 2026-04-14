@@ -14,7 +14,6 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $role = $request->query('role');
-
         $users = User::query();
 
         if ($role) {
@@ -53,7 +52,7 @@ class UserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('users.index',)
+        return redirect()->route('users.index')
             ->with('success', 'User berhasil ditambahkan');
     }
 
@@ -63,7 +62,6 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-
         return view('admin.users.edit', compact('user'));
     }
 
@@ -86,7 +84,6 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
-        // password optional (kalau diisi baru diupdate)
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
@@ -109,4 +106,39 @@ class UserController extends Controller
             ->with('success', 'User berhasil dihapus');
     }
 
+    // =====================
+    // EXPORT DATA (TAMBAHAN)
+    // =====================
+    public function export()
+    {
+        $users = User::all();
+        $fileName = 'export_users_' . date('Y-m-d') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Nama', 'Email', 'Role', 'Tanggal Terdaftar'];
+
+        $callback = function() use($users, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->name,
+                    $user->email,
+                    $user->role,
+                    $user->created_at->format('Y-m-d')
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

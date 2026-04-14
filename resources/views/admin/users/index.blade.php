@@ -6,12 +6,17 @@
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Users</h1>
+            <a href="{{ route('users.export') }}"
+               class="bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition text-sm">
+                Export Data
+            </a>
 
-        <a href="{{ route('users.create') }}"
-           class="bg-blue-500 text-white px-4 py-2 rounded">
-            + Add User
-        </a>
-    </div>
+            <a href="{{ route('users.create') }}"
+               class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition text-sm">
+                + Add User
+            </a>
+        </div>
+
 
     <div class="bg-white shadow rounded overflow-hidden">
         <table class="w-full">

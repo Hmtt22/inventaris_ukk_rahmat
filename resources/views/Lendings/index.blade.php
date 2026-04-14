@@ -67,15 +67,15 @@
 
                     {{-- Tanggal Pinjam dengan Jam (created_at) --}}
                     <td class="p-3">
-                        {{ now()->timezone('Asia/Jakarta')->format('d-m-Y H:i') }}
+                        {{ $lending->created_at->timezone('Asia/Jakarta')->format('d-m-Y H:i') }}
                     </td>
 
                     {{-- Returned At --}}
-                   <td class="p-3">
-    {{ $lending->returned_at
-        ? \Carbon\Carbon::parse($lending->returned_at)->timezone('Asia/Jakarta')->format('d-m-Y H:i')
-        : 'Not Returned' }}
-</td>
+                    <td class="p-3">
+                        {{ $lending->returned_at
+                        ? \Carbon\Carbon::parse($lending->returned_at)->timezone('Asia/Jakarta')->format('d-m-Y H:i')
+                            : 'Not Returned' }}
+                    </td>
 
                     {{-- Edited By --}}
                     <td class="p-3">

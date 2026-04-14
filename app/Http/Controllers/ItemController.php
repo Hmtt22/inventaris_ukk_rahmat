@@ -8,21 +8,21 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    // INDEX
+    // INDEX - Menampilkan semua data barang
     public function index()
     {
         $items = Item::with('category')->latest()->get();
         return view('admin.items.index', compact('items'));
     }
 
-    // CREATE
+    // CREATE - Menampilkan form tambah barang
     public function create()
     {
         $categories = Category::all();
         return view('admin.items.create', compact('categories'));
     }
 
-    // STORE
+    // STORE - Menyimpan data barang baru
     public function store(Request $request)
     {
         $request->validate([
@@ -43,7 +43,7 @@ class ItemController extends Controller
             ->with('success', 'Item berhasil ditambahkan');
     }
 
-    // EDIT
+    // EDIT - Menampilkan form edit barang
     public function edit($id)
     {
         $item = Item::findOrFail($id);
@@ -52,7 +52,7 @@ class ItemController extends Controller
         return view('admin.items.edit', compact('item', 'categories'));
     }
 
-    // UPDATE
+    // UPDATE - Memperbarui data barang
     public function update(Request $request, $id)
     {
         $item = Item::findOrFail($id);
@@ -78,7 +78,7 @@ class ItemController extends Controller
             ->with('success', 'Item berhasil diupdate');
     }
 
-    // DELETE
+    // DELETE - Menghapus data barang
     public function destroy($id)
     {
         $item = Item::findOrFail($id);
@@ -86,5 +86,42 @@ class ItemController extends Controller
 
         return redirect()->route('admin.items.index')
             ->with('success', 'Item berhasil dihapus');
+    }
+
+    // EXPORT - Method yang tadi hilang
+    public function export()
+    {
+        $items = Item::with('category')->get();
+
+        $fileName = 'data_barang_' . date('Y-m-d') . '.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Nama Barang', 'Kategori', 'Stok Total', 'Dipinjam', 'Diperbaiki');
+
+        $callback = function() use($items, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($items as $item) {
+                fputcsv($file, array(
+                    $item->item_name,
+                    $item->category->name ?? 'Tanpa Kategori',
+                    $item->total_stock,
+                    $item->total_borrowed,
+                    $item->total_repaired
+                ));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
