@@ -11,17 +11,18 @@
 
         <div class="mb-4">
             <label>Item Name</label>
-            <input type="text" name="item_name" class="w-full border p-2 rounded">
+            <input type="text" name="item_name" class="w-full border p-2 rounded" required>
         </div>
 
         <div class="mb-4">
-            <label>Total Stock</label>
-            <input type="number" name="total_stock" class="w-full border p-2 rounded">
+            <label>Total</label>
+            <input type="number" name="total_stock" class="w-full border p-2 rounded" required>
         </div>
 
         <div class="mb-4">
             <label>Category</label>
             <select name="category_id" class="w-full border p-2 rounded">
+                <option>Pilih Category</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">
                         {{ $category->name }}

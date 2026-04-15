@@ -61,9 +61,18 @@ class ItemController extends Controller
             'item_name' => 'required',
             'total_stock' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
+            'total_repaired' => 'nullable|integer|min:0',
         ]);
 
-        $item->update($request->all());
+        $item->item_name = $request->item_name;
+        $item->total_stock = $request->total_stock;
+        $item->category_id = $request->category_id;
+
+        if ($request->filled('total_repaired')) {
+            $item->total_repaired += $request->total_repaired;
+        }
+
+        $item->save();
 
         return redirect()->route('admin.items.index')
             ->with('success', 'Item berhasil diupdate');

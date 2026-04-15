@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
+ use App\Http\Controllers\LendingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +38,7 @@ Route::post('/login', function (Request $request) {
         }
 
         if ($role === 'operator') {
-            return redirect('/dashboard');
+            return redirect('/operator/dashboard');
         }
 
         Auth::logout();
@@ -85,14 +87,28 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
     Route::delete('/items/{id}', [ItemController::class, 'destroy'])->name('admin.items.destroy');
 });
 
+Route::prefix('operator')->middleware('role:operator')->group(function () {
+    Route::get('/dashboard', function () {return view('operator.dashboard');})->name('operator.dashboard');
+    
+    Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
+    Route::get('/lendings/create', [LendingController::class, 'create'])->name('lendings.create');
+    Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
 
+    Route::get('/lendings/{id}/edit', [LendingController::class, 'edit'])->name('lendings.edit');
+    Route::put('/lendings/{id}', [LendingController::class, 'update'])->name('lendings.update');
 
-Route::prefix('users')->middleware('role:admin,operator')->group(function () {
+    Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('lendings.destroy');
+
+    Route::post('/lendings/{id}/return', [LendingController::class, 'return'])
+        ->name('lendings.return');
+});
+
+Route::prefix('users')->group(function () {
 
     // USER MANAGEMENT (admin & operator bisa akses)
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');

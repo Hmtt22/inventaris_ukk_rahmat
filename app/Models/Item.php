@@ -22,4 +22,9 @@ class Item extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+     public function lendings()
+    {
+        return $this->hasMany(Lending::class);
+    }
 }

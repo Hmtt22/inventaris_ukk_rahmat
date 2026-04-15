@@ -23,7 +23,11 @@
 
                 <nav class="space-y-4">
 
-                    <a href="#" class="flex items-center gap-4 bg-[#254adb] p-3 rounded-lg transition duration-200 shadow-md">
+                    <a href="{{ Auth::user()->role === 'admin' 
+                            ? route('admin.dashboard') 
+                            : route('operator.dashboard') }}"
+                        class="flex items-center gap-4 p-3 rounded-lg transition duration-200 shadow-md
+                        {{ request()->routeIs('admin.dashboard') || request()->routeIs('operator.dashboard') ? 'bg-[#254adb]' : 'hover:bg-[#254adb]' }}">
                         <i class="fas fa-th-large w-5 text-center"></i>
                         <span class="font-semibold">Dashboard</span>
                     </a>
@@ -31,19 +35,27 @@
                     <div class="pt-4">
                         <p class="text-[10px] text-blue-300 uppercase font-extrabold mb-3 px-3 tracking-[0.2em] opacity-80">Items Data</p>
                         <div class="space-y-1">
-                            <a href="{{ route('admin.categories.index') }}" 
-                            class="flex items-center gap-4 p-3 hover:bg-[#254adb] rounded-lg transition group">
-                                <i class="fas fa-chart-pie w-5 text-center text-blue-300 group-hover:text-white"></i>
-                                <span class="group-hover:translate-x-1 transition duration-200">Categories</span>
-                            </a>
+                            @auth
+                                @if(Auth::user()->role === 'admin')
+                                    <a href="{{ route('admin.categories.index') }}" 
+                                    class="flex items-center gap-4 p-3 hover:bg-[#254adb] rounded-lg transition group">
+                                        <i class="fas fa-chart-pie w-5 text-center text-blue-300 group-hover:text-white"></i>
+                                        <span class="group-hover:translate-x-1 transition duration-200">Categories</span>
+                                    </a>
+                                @endif
+                            @endauth
                             <a href="{{ route('admin.items.index') }}" class="flex items-center gap-4 p-3 hover:bg-[#254adb] rounded-lg transition group">
                                 <i class="fas fa-chart-pie w-5 text-center text-blue-300 group-hover:text-white"></i>
                                 <span class="group-hover:translate-x-1 transition duration-200">Items</span>
                             </a>
-                            <a href="#" class="flex items-center gap-4 p-3 hover:bg-[#254adb] rounded-lg transition group">
-                                <i class="fas fa-sync w-5 text-center text-blue-300 group-hover:text-white"></i>
-                                <span class="group-hover:translate-x-1 transition duration-200">Lending</span>
-                            </a>
+                            @auth
+                                @if(Auth::user()->role === 'operator')
+                                    <a href="{{ route('lendings.index') }}" class="flex items-center gap-4 p-3 hover:bg-[#254adb] rounded-lg transition group">
+                                        <i class="fas fa-sync w-5 text-center text-blue-300 group-hover:text-white"></i>
+                                        <span class="group-hover:translate-x-1 transition duration-200">Lending</span>
+                                    </a>
+                                @endif
+                            @endauth
                         </div>
                     </div>
 

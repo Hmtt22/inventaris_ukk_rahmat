@@ -36,6 +36,11 @@
             </select>
         </div>
 
+        <div class="mb-4">
+            <label>New Broke Item </label>
+            <input type="number" name="total_repaired" class="w-full border p-2 rounded" >
+        </div>
+
         <button class="bg-yellow-500 text-white px-4 py-2 rounded">
             Update
         </button>
